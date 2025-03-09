@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import './BufferedReadersPage.css';
-import logoImage1 from '../assets/cse.png';
-import bufferedReaderImage from '../assets/buffered_reader.png';
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import "./BufferedReadersPage.css";
+import logoImage1 from "../../assets/cse.png";
+import bufferedReaderImage from "../../assets/buffered_reader.png";
 import { useNavigate } from "react-router-dom";
+import cachedFetch from "../../utils/cachedFetch";
+
 const BUFFERED_READERS_FOLDER_ID = "1J2F5-1N7NywbC9NZ6W1wDhZ_zjG2Xd1e"; // Replace with your actual Folder ID
-const API_KEY = "AIzaSyCrKnWIvGZkh39oA58YfBR0EktQENVYDt0"; // Replace with your Google Drive API key
+const API_KEY = import.meta.env.VITE_API_KEY; // Changed from process.env.API_KEY
 
 const BufferedReadersPage = () => {
   const [isSticky, setIsSticky] = useState(false);
-  const [activeFilter, setActiveFilter] = useState('ALL');
+  const [activeFilter, setActiveFilter] = useState("ALL");
   const [showDropdown, setShowDropdown] = useState(false);
   const [expandedCards, setExpandedCards] = useState({});
   const [pdfData, setPdfData] = useState({});
@@ -19,7 +21,7 @@ const BufferedReadersPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const handleScroll = () => setIsSticky(window.scrollY > 115);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -27,11 +29,11 @@ const BufferedReadersPage = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    
+    document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -39,10 +41,16 @@ const BufferedReadersPage = () => {
   async function getSubfolders() {
     try {
       const url = `https://www.googleapis.com/drive/v3/files?q='${BUFFERED_READERS_FOLDER_ID}'+in+parents+and+mimeType='application/vnd.google-apps.folder'&key=${API_KEY}&fields=files(id, name)`;
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Failed to fetch subfolders");
-      
-      const data = await response.json();
+
+      // Use cachedFetch instead of fetch
+      const data = await cachedFetch(
+        url,
+        {},
+        {
+          ttl: 30 * 24 * 60 * 60 * 1000, // Cache for 1 month
+        }
+      );
+
       return data.files.sort((a, b) => b.name.localeCompare(a.name)); // Reverse Order
     } catch (error) {
       console.error("Error fetching subfolders:", error);
@@ -55,10 +63,16 @@ const BufferedReadersPage = () => {
   async function getPdfsFromFolder(folderId) {
     try {
       const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType='application/pdf'&key=${API_KEY}&fields=files(id, name, webViewLink)`;
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Failed to fetch PDFs for folder ${folderId}`);
-      
-      const data = await response.json();
+
+      // Use cachedFetch instead of fetch
+      const data = await cachedFetch(
+        url,
+        {},
+        {
+          ttl: 24 * 60 * 60 * 1000, // Cache for 24 hours since PDF listings rarely change
+        }
+      );
+
       return data.files;
     } catch (error) {
       console.error("Error fetching PDFs:", error);
@@ -71,7 +85,7 @@ const BufferedReadersPage = () => {
     async function fetchData() {
       setLoading(true);
       setError(null);
-  
+
       console.log("Fetching subfolders...");
 
       const subfolders = await getSubfolders();
@@ -94,14 +108,14 @@ const BufferedReadersPage = () => {
       setLoading(false);
     }
 
-    fetchData().catch(error => {
+    fetchData().catch((error) => {
       console.error("Error fetching data:", error);
       setError("Failed to load data.");
       setLoading(false);
     });
   }, []);
 
-  const filterOptions = ['ALL', ...Object.keys(pdfData)];
+  const filterOptions = ["ALL", ...Object.keys(pdfData)];
 
   const toggleCardExpansion = (year) => {
     setExpandedCards((prevState) => ({
@@ -113,24 +127,37 @@ const BufferedReadersPage = () => {
   return (
     <div className="buffered-readers-container">
       {/* Navbar */}
-      <div className={`Topnav ${isSticky ? 'sticky' : ''}`}>
+      <div className={`Topnav ${isSticky ? "sticky" : ""}`}>
         <div className="logo">
-        <a href="https://cses.iitism.ac.in/"><img src={logoImage1} alt="CSE Logo" /></a>
+          <a href="https://cses.iitism.ac.in/">
+            <img src={logoImage1} alt="CSE Logo" />
+          </a>
         </div>
         <div className="nav-group">
           <div className="nav-basic">
-            <Link to="/" className="nav-link">Home</Link>
-            <Link to="/teams" className="nav-link">Teams</Link>
+            <Link to="/" className="nav-link">
+              Home
+            </Link>
+            <Link to="/teams" className="nav-link">
+              Teams
+            </Link>
           </div>
           <div className="nav-special">
-            <Link to="/bytestreams" className="nav-link highlight bytestreams">Bytestreams</Link>
-            <Link to="/buffered-readers" className="nav-link highlight buffered-readers active">
+            <Link to="/bytestreams" className="nav-link highlight bytestreams">
+              Bytestreams
+            </Link>
+            <Link
+              to="/buffered-readers"
+              className="nav-link highlight buffered-readers active"
+            >
               Buffered Readers
               <div className="active-indicator"></div>
             </Link>
           </div>
           <div className="nav-about">
-            <Link to="/about" className="nav-link">About Us</Link>
+            <Link to="/about" className="nav-link">
+              About Us
+            </Link>
           </div>
         </div>
       </div>
@@ -139,11 +166,13 @@ const BufferedReadersPage = () => {
       <div className="archive-header">
         <div className="archive-header-content">
           <h1>BUFFERED READERS ARCHIVE</h1>
-          <p>Explore these magazines to witness the rich history of our society</p>
+          <p>
+            Explore these magazines to witness the rich history of our society
+          </p>
 
           {/* Dropdown filter */}
           <div className="filter-dropdown-container1" ref={dropdownRef}>
-            <button 
+            <button
               className="filter-dropdown-btn1"
               onClick={() => setShowDropdown(!showDropdown)}
             >
@@ -152,7 +181,7 @@ const BufferedReadersPage = () => {
             {showDropdown && (
               <div className="filter-dropdown-menu1">
                 {filterOptions.map((option, index) => (
-                  <div 
+                  <div
                     key={index}
                     className="filter-option1"
                     onClick={() => {
@@ -177,10 +206,13 @@ const BufferedReadersPage = () => {
       {!loading && !error && (
         <div className="magazines-section1">
           {Object.entries(pdfData)
-            .filter(([year]) => activeFilter === 'ALL' || activeFilter === year)
+            .filter(([year]) => activeFilter === "ALL" || activeFilter === year)
             .map(([year, pdfs], index) => (
               <div key={index} className="year-section1">
-                <div className="year-title1" onClick={() => toggleCardExpansion(year)}>
+                <div
+                  className="year-title1"
+                  onClick={() => toggleCardExpansion(year)}
+                >
                   {year}
                 </div>
                 {expandedCards[year] && (
@@ -191,18 +223,22 @@ const BufferedReadersPage = () => {
                           <div className="magazine-text1">
                             <h3>{pdf.name}</h3>
                             <button
-  className="read-btn1"
-  onClick={() =>
-    navigate("/pdf-viewer", {
-      state: { pdfUrl: pdf.id }, // Pass only the file ID
-    })
-  }
->
-  READ
-</button>
+                              className="read-btn1"
+                              onClick={() =>
+                                navigate("/pdf-viewer", {
+                                  state: { pdfUrl: pdf.id }, // Pass only the file ID
+                                })
+                              }
+                            >
+                              READ
+                            </button>
                           </div>
                           <div className="magazine-image-container">
-                            <img src={bufferedReaderImage} className="magazine-image" alt="Buffered Reader" />
+                            <img
+                              src={bufferedReaderImage}
+                              className="magazine-image"
+                              alt="Buffered Reader"
+                            />
                           </div>
                         </div>
                       </div>
@@ -214,7 +250,10 @@ const BufferedReadersPage = () => {
         </div>
       )}
       <footer className="footer">
-        <p>CSE Society: IIT ISM<br /> Dhanbad</p>
+        <p>
+          CSE Society: IIT ISM
+          <br /> Dhanbad
+        </p>
       </footer>
     </div>
   );

@@ -1,46 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './TeamsPage.css';
-import logoImage1 from '../assets/cse.png';
-import logoImage2 from '../assets/logo.png';
+import logoImage1 from '../../assets/cse.png';
+import logoImage2 from '../../assets/logo.png';
 
 // Import all the professor images
-import Ck_sir from '../assets/professor/ck_sir.jpg';
-import Dr from '../assets/professor/dr.jpg';
-import Pb_coFIC from '../assets/professor/pb_coFIC.jpg';
-import Ps from '../assets/professor/ps.jpg';
-import Sb_sir from '../assets/professor/sb_sir.jpg';
+import Ck_sir from '../../assets/professor/ck_sir.jpg';
+import Dr from '../../assets/professor/dr.jpg';
+import Pb_coFIC from '../../assets/professor/pb_coFIC.jpg';
+import Ps from '../../assets/professor/ps.jpg';
+import Sb_sir from '../../assets/professor/sb_sir.jpg';
 
 
 // Import all the student images
-import Sk_student from '../assets/student/sk.jpg';
-import AbhishekDas from '../assets/student/AbhishekDas.jpg';
-import Anirban from '../assets/student/anirban.jpeg';
-import Daksh from '../assets/student/Daksh.jpg';
-import Deepika from '../assets/student/deepika.jpg';
-import Divyanshu from '../assets/student/Divyanshu.jpg';
-import Eshita from '../assets/student/eshita.jpg';
-import Jatin from '../assets/student/Jatin.jpg';
-import Kasam from '../assets/student/Kasam.jpg';
-import Kshitiz from '../assets/student/Kshitiz.jpg';
-import Monil from '../assets/student/Monil.jpg';
-import NagaChaitanya from '../assets/student/Naga Chaitanya.jpg';
-import Pragna from '../assets/student/pragna.jpg';
-import Riya from '../assets/student/Riya.jpg';
-import Rk from '../assets/student/rk.jpg';
-import Robin from '../assets/student/Robin.jpg';
-import Rohan from '../assets/student/Rohan.jpg';
-import Saksham from '../assets/student/saksham.jpg';
-import Samarth from '../assets/student/Samarth.jpg';
-import Shacin from '../assets/student/shacin.jpg';
-import Sharthak from '../assets/student/sharthak.jpg';
-import Shashwat from '../assets/student/Shashwat.jpg';
-import Shreyansh from '../assets/student/shreyansh.jpeg';
-import Shyam from '../assets/student/shyam.jpg';
-import Sumit from '../assets/student/sumit.jpg';
-import Supreeth from '../assets/student/Supreeth.jpg';
-import Suprith from '../assets/student/suprith.jpg';
-import Sv from '../assets/student/sv.jpg';
+import Sk_student from '../../assets/student/sk.jpg';
+import AbhishekDas from '../../assets/student/AbhishekDas.jpg';
+import Anirban from '../../assets/student/anirban.jpeg';
+import Daksh from '../../assets/student/Daksh.jpg';
+import Deepika from '../../assets/student/deepika.jpg';
+import Divyanshu from '../../assets/student/Divyanshu.jpg';
+import Eshita from '../../assets/student/eshita.jpg';
+import Jatin from '../../assets/student/Jatin.jpg';
+import Kasam from '../../assets/student/Kasam.jpg';
+import Kshitiz from '../../assets/student/Kshitiz.jpg';
+import Monil from '../../assets/student/Monil.jpg';
+import NagaChaitanya from '../../assets/student/Naga Chaitanya.jpg';
+import Pragna from '../../assets/student/pragna.jpg';
+import Riya from '../../assets/student/Riya.jpg';
+import Rk from '../../assets/student/rk.jpg';
+import Robin from '../../assets/student/Robin.jpg';
+import Rohan from '../../assets/student/Rohan.jpg';
+import Saksham from '../../assets/student/saksham.jpg';
+import Samarth from '../../assets/student/Samarth.jpg';
+import Shacin from '../../assets/student/shacin.jpg';
+import Sharthak from '../../assets/student/sharthak.jpg';
+import Shashwat from '../../assets/student/Shashwat.jpg';
+import Shreyansh from '../../assets/student/shreyansh.jpeg';
+import Shyam from '../../assets/student/shyam.jpg';
+import Sumit from '../../assets/student/sumit.jpg';
+import Supreeth from '../../assets/student/Supreeth.jpg';
+import Suprith from '../../assets/student/suprith.jpg';
+import Sv from '../../assets/student/sv.jpg';
 
 const TeamsPage = () => {
   const [activeSection, setActiveSection] = useState('admin');

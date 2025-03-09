@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react"; // Import useEffect
 import { Document, Page, pdfjs } from "react-pdf";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios"; // Import axios for fetching the PDF
+import "./PDFFlipbook.css"; // Import the CSS file
 
 // Set up the PDF worker
-pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/pdf.worker.mjs`;
+// pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/pdf.worker.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `http://localhost:5000/pdf.worker.mjs`;
 
 const PdfViewer = () => {
   const location = useLocation();
@@ -25,7 +27,7 @@ const PdfViewer = () => {
     const fetchPdf = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/download?fileId=${fileId}`,
+          `http://localhost:5000/download?fileId=${fileId}`,
           { responseType: "arraybuffer" }
         );
 
@@ -35,7 +37,9 @@ const PdfViewer = () => {
         setPdfBlobUrl(blobUrl);
       } catch (err) {
         console.error("Error fetching PDF:", err);
-        setError("Failed to fetch the PDF. Please check the file ID and try again.");
+        setError(
+          "Failed to fetch the PDF. Please check the file ID and try again."
+        );
       }
     };
 
@@ -64,7 +68,9 @@ const PdfViewer = () => {
             <Document
               file={pdfBlobUrl} // Use the Blob URL
               onLoadSuccess={onDocumentLoadSuccess}
-              onLoadError={(error) => console.error("Error loading PDF:", error)}
+              onLoadError={(error) =>
+                console.error("Error loading PDF:", error)
+              }
             >
               <Page pageNumber={pageNumber} width={800} />
             </Document>
@@ -79,7 +85,9 @@ const PdfViewer = () => {
               ⬅ Previous
             </button>
             <button
-              onClick={() => setPageNumber((prev) => Math.min(prev + 1, numPages))}
+              onClick={() =>
+                setPageNumber((prev) => Math.min(prev + 1, numPages))
+              }
               disabled={pageNumber === numPages}
             >
               Next ➡

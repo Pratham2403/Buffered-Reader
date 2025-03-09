@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
-import logoImage2 from './assets/logo.png';
-import logoImage1 from './assets/cse.png';
-import bufferedReaderImage from './assets/buffered_reader.png';
+import logoImage2 from '../assets/logo.png';
+import logoImage1 from '../assets/cse.png';
+import bufferedReaderImage from '../assets/buffered_reader.png';
 import { useNavigate } from 'react-router-dom';
 const HomePage = () => {
   const navigate = useNavigate();

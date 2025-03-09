@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './AboutPage.css';
-import logoImage1 from '../assets/cse.png';
+import logoImage1 from '../../assets/cse.png';
 
 const AboutPage = () => {
   const [isSticky, setIsSticky] = useState(false);

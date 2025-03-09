@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage";
 import TeamsPage from "./components/Team/TeamsPage";
 import BufferedReadersPage from "./components/BufferedReadersPage/BufferedReadersPage";
 import BytestreamsPage from "./components/ByteStreamPage/BytestreamsPage";
-import AboutPage from "./components/AboutPage";
+import AboutPage from "./components/AboutPage/AboutPage";
 import PDFFlipbook from "./components/Flipbook/PDFFlipbook";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
